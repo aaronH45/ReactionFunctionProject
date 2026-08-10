@@ -1,0 +1,209 @@
+
+==========================================================================
+CHECK 1  --  pi* dispersion across FOMC participants
+==========================================================================
+  meetings with participant-level longer-run PCE : 36 (2012-01-25 to 2020-12-16)
+  participant-horizon rows                       : 594
+  distinct values submitted                      : [np.float64(2.0)]
+  max within-meeting SD                          : 0.000000
+  meetings with SD > 0                           : 0 of 36
+  SPD longer-run PCE median, distinct values      : [np.float64(2.0)]  (n=91)
+
+  VERDICT: FAIL -- pi* dispersion is identically zero; r*_i,t is the longer-run dot minus a constant. The extraction is a relabelling.
+
+==========================================================================
+CHECK 2  --  wedge variance decomposition
+==========================================================================
+
+  SPD   n=80
+    var(r*_Fed)=0.23549   var(r*_Mkt)=0.23623   cov=+0.22163
+    var(Delta) =0.02845   (identity check 0.02845)
+    var(r*_Fed) / [var(F)+var(M)] =  49.9%   threshold 15%
+    corr(F, M) = +0.940
+    VERDICT: PASS
+
+  ACM   n=115
+    var(r*_Fed)=0.33512   var(r*_Mkt)=0.33160   cov=-0.20053
+    var(Delta) =1.06778   (identity check 1.06778)
+    var(r*_Fed) / [var(F)+var(M)] =  50.3%   threshold 15%
+    corr(F, M) = -0.602
+    VERDICT: PASS
+
+==========================================================================
+CHECK 3  --  R2 of the wedge on each side alone
+==========================================================================
+  SPD   Delta ~ r*_Fed  R2 = 0.029      Delta ~ r*_Mkt  R2 = 0.032   n=80
+          VERDICT: PASS
+  ACM   Delta ~ r*_Fed  R2 = 0.802      Delta ~ r*_Mkt  R2 = 0.800   n=115
+          VERDICT: BORDERLINE  (both sides ~0.8: the two series are NEGATIVELY correlated, so each alone explains most of Delta. Not the degenerate var(F)=0 case check 3 was written to catch, but the wedge is close to a linear function of either side.)
+
+==========================================================================
+CHECK 4  --  effective sample size
+==========================================================================
+  SEP meetings                              : 57
+  distinct values of the SEP longer-run r*   : 12  -> [np.float64(0.375), np.float64(0.5), np.float64(0.5625), np.float64(0.75), np.float64(0.875), np.float64(1.0), np.float64(1.125), np.float64(1.25), np.float64(1.5), np.float64(1.75), np.float64(2.0), np.float64(2.2)]
+  meetings at which the median CHANGED       : 19
+  longest run without a change               : 10
+  FOMC meetings in the event panel           : 116
+  -> effective N for anything driven by the Fed-side level is 19, not 116
+  distinct values of Delta (SPD)              : 16 over 80 meetings
+  distinct values of Delta (ACM)              : 115 over 115 meetings
+
+==========================================================================
+CHECK 5  --  first differences: do both sides track a common signal?
+==========================================================================
+  SPD  corr(d r*_Fed, d r*_Mkt) = +0.600   n=41   sd(dF)=0.123  sd(dM)=0.138
+        VERDICT: PASS
+  ACM  corr(d r*_Fed, d r*_Mkt) = -0.136   n=55   sd(dF)=0.107  sd(dM)=0.157
+        VERDICT: PASS
+
+==========================================================================
+CHECK 6  --  persistence of the wedge
+==========================================================================
+  SPD  AR(1) rho = +0.849  (se 0.053)   half-life 4.2 meetings   mean +0.080  sd 0.169   n=79
+        VERDICT: PASS
+  ACM  AR(1) rho = +0.979  (se 0.011)   half-life 31.9 meetings   mean -0.148  sd 1.033   n=114
+        VERDICT: FAIL
+
+==========================================================================
+CHECK 7  --  Mercatus replication: SEP vs SPD longer-run funds rate
+==========================================================================
+  SEP meetings with a same-month SPD survey : 42 (2013-03-20 to 2026-03-18)
+  mean |gap|     13.1 bp
+  median |gap|   13.0 bp
+  max |gap|      25.0 bp   on 2014-09-17
+  share |gap| <= 13 bp : 52.4%
+  share |gap| <= 42 bp : 100.0%
+
+==========================================================================
+FALLBACK  --  cross-sectional dispersion of the SEP r* panel
+==========================================================================
+  SD of the longer-run r* panel: mean 0.304  sd 0.063  range [0.217, 0.461]
+  distinct SD values: 49 over 57 meetings
+  AR(1) rho of the dispersion series: +0.803
+
+==========================================================================
+CHECK 8  --  announcement-window decomposition on the pre-meeting wedge
+==========================================================================
+
+  window d1   wedge = SPD
+  2y total yield                      b=  +2.792  se= 5.538  t= +0.50  p=0.614  R2=0.006  n=80
+  2y risk-neutral                     b=  +0.656  se= 4.462  t= +0.15  p=0.883  R2=0.000  n=80
+  2y term premium                     b=  +2.135  se= 1.584  t= +1.35  p=0.178  R2=0.011  n=80
+
+  5y total yield                      b=  +2.324  se= 6.098  t= +0.38  p=0.703  R2=0.003  n=80
+  5y risk-neutral                     b=  +1.286  se= 4.984  t= +0.26  p=0.796  R2=0.001  n=80
+  5y term premium                     b=  +1.038  se= 1.798  t= +0.58  p=0.564  R2=0.003  n=80
+
+  10y total yield                     b=  +1.719  se= 4.528  t= +0.38  p=0.704  R2=0.003  n=80
+  10y risk-neutral                    b=  +1.174  se= 4.190  t= +0.28  p=0.779  R2=0.001  n=80
+  10y term premium                    b=  +0.545  se= 2.062  t= +0.26  p=0.792  R2=0.000  n=80
+
+
+  window d1   wedge = ACM
+  2y total yield                      b=  +1.145  se= 0.625  t= +1.83  p=0.067  R2=0.033  n=115
+  2y risk-neutral                     b=  +0.994  se= 0.609  t= +1.63  p=0.103  R2=0.032  n=115
+  2y term premium                     b=  +0.151  se= 0.446  t= +0.34  p=0.735  R2=0.001  n=115
+
+  5y total yield                      b=  +1.839  se= 0.687  t= +2.68  p=0.007  R2=0.066  n=115
+  5y risk-neutral                     b=  +1.184  se= 0.642  t= +1.84  p=0.065  R2=0.038  n=115
+  5y term premium                     b=  +0.655  se= 0.288  t= +2.27  p=0.023  R2=0.035  n=115
+
+  10y total yield                     b=  +1.508  se= 0.515  t= +2.93  p=0.003  R2=0.069  n=115
+  10y risk-neutral                    b=  +1.021  se= 0.532  t= +1.92  p=0.055  R2=0.040  n=115
+  10y term premium                    b=  +0.486  se= 0.409  t= +1.19  p=0.235  R2=0.011  n=115
+
+
+  window d2   wedge = SPD
+  2y total yield                      b=  +7.878  se= 6.423  t= +1.23  p=0.220  R2=0.031  n=80
+  2y risk-neutral                     b=  +3.367  se= 4.829  t= +0.70  p=0.486  R2=0.010  n=80
+  2y term premium                     b=  +4.510  se= 2.797  t= +1.61  p=0.107  R2=0.022  n=80
+
+  5y total yield                      b=  +6.448  se= 7.071  t= +0.91  p=0.362  R2=0.014  n=80
+  5y risk-neutral                     b=  +4.710  se= 4.992  t= +0.94  p=0.345  R2=0.016  n=80
+  5y term premium                     b=  +1.738  se= 3.805  t= +0.46  p=0.648  R2=0.002  n=80
+
+  10y total yield                     b=  +4.140  se= 6.615  t= +0.63  p=0.531  R2=0.006  n=80
+  10y risk-neutral                    b=  +4.059  se= 4.131  t= +0.98  p=0.326  R2=0.017  n=80
+  10y term premium                    b=  +0.080  se= 4.708  t= +0.02  p=0.986  R2=0.000  n=80
+
+
+  window d2   wedge = ACM
+  2y total yield                      b=  +2.248  se= 0.875  t= +2.57  p=0.010  R2=0.064  n=115
+  2y risk-neutral                     b=  +1.457  se= 0.576  t= +2.53  p=0.011  R2=0.054  n=115
+  2y term premium                     b=  +0.791  se= 0.635  t= +1.25  p=0.213  R2=0.016  n=115
+
+  5y total yield                      b=  +3.339  se= 0.822  t= +4.06  p=0.000  R2=0.116  n=115
+  5y risk-neutral                     b=  +1.715  se= 0.633  t= +2.71  p=0.007  R2=0.061  n=115
+  5y term premium                     b=  +1.623  se= 0.505  t= +3.21  p=0.001  R2=0.063  n=115
+
+  10y total yield                     b=  +3.139  se= 0.750  t= +4.18  p=0.000  R2=0.108  n=115
+  10y risk-neutral                    b=  +1.493  se= 0.527  t= +2.84  p=0.005  R2=0.066  n=115
+  10y term premium                    b=  +1.646  se= 0.653  t= +2.52  p=0.012  R2=0.039  n=115
+
+  identity |dy - drn - dtp| max = 1.42e-14 bp  (should be ~0)
+
+  low-revision SEP meetings (median unchanged): 38
+  low-rev 10y rn (ACM)                b=  +2.351  se= 0.885  t= +2.66  p=0.008  R2=0.132  n=37
+  low-rev 10y tp (ACM)                b=  +0.837  se= 0.669  t= +1.25  p=0.211  R2=0.012  n=37
+  low-rev 10y rn (SPD)                b=  +5.492  se= 2.767  t= +1.98  p=0.047  R2=0.021  n=27
+  low-rev 10y tp (SPD)                b=  -6.984  se= 7.772  t= -0.90  p=0.369  R2=0.012  n=27
+
+==========================================================================
+CHECK 9  --  maturity signature
+==========================================================================
+
+  wedge = ACM   (2-day window, coefficient in bp per pp of wedge)
+     n     total      risk-neutral   term premium
+     1    +1.41(+2.51)    +0.95(+2.13)    +0.45(+0.91)
+     2    +2.25(+2.57)    +1.46(+2.53)    +0.79(+1.25)
+     3    +2.84(+3.17)    +1.65(+2.61)    +1.19(+2.10)
+     4    +3.18(+3.70)    +1.71(+2.67)    +1.47(+2.87)
+     5    +3.34(+4.06)    +1.72(+2.71)    +1.62(+3.21)
+     6    +3.38(+4.27)    +1.69(+2.75)    +1.69(+3.22)
+     7    +3.35(+4.36)    +1.65(+2.78)    +1.71(+3.07)
+     8    +3.30(+4.36)    +1.60(+2.80)    +1.70(+2.88)
+     9    +3.22(+4.29)    +1.55(+2.82)    +1.67(+2.69)
+    10    +3.14(+4.18)    +1.49(+2.84)    +1.65(+2.52)
+
+  wedge = SPD   (2-day window, coefficient in bp per pp of wedge)
+     n     total      risk-neutral   term premium
+     1    +4.41(+0.90)    +0.46(+0.12)    +3.94(+1.84)
+     2    +7.88(+1.23)    +3.37(+0.70)    +4.51(+1.61)
+     3    +7.96(+1.15)    +4.35(+0.85)    +3.61(+1.15)
+     4    +7.23(+1.02)    +4.66(+0.91)    +2.57(+0.74)
+     5    +6.45(+0.91)    +4.71(+0.94)    +1.74(+0.46)
+     6    +5.77(+0.83)    +4.64(+0.96)    +1.13(+0.28)
+     7    +5.23(+0.76)    +4.52(+0.97)    +0.71(+0.17)
+     8    +4.79(+0.71)    +4.37(+0.98)    +0.42(+0.09)
+     9    +4.43(+0.66)    +4.21(+0.98)    +0.22(+0.05)
+    10    +4.14(+0.63)    +4.06(+0.98)    +0.08(+0.02)
+
+==========================================================================
+CHECK 10  --  signed versus absolute wedge
+==========================================================================
+
+  wedge = ACM
+  10y y ~ signed                      b=  +3.139  se= 0.750  t= +4.18  p=0.000  R2=0.108  n=115
+  10y y ~ |wedge|                     b=  -0.450  se= 2.173  t= -0.21  p=0.836  R2=0.001  n=115
+      asymmetric: pos b= +2.180 (t +1.72)   neg b= -4.197 (t -2.18)   R2=0.111
+  10y rn ~ signed                     b=  +1.493  se= 0.527  t= +2.84  p=0.005  R2=0.066  n=115
+  10y rn ~ |wedge|                    b=  -2.143  se= 1.093  t= -1.96  p=0.050  R2=0.038  n=115
+      asymmetric: pos b= -0.813 (t -1.22)   neg b= -4.038 (t -3.96)   R2=0.115
+  10y tp ~ signed                     b=  +1.646  se= 0.653  t= +2.52  p=0.012  R2=0.039  n=115
+  10y tp ~ |wedge|                    b=  +1.693  se= 1.467  t= +1.15  p=0.249  R2=0.012  n=115
+      asymmetric: pos b= +2.993 (t +2.50)   neg b= -0.158 (t -0.10)   R2=0.048
+
+  wedge = SPD
+  10y y ~ signed                      b=  +4.140  se= 6.615  t= +0.63  p=0.531  R2=0.006  n=80
+  10y y ~ |wedge|                     b=  +1.473  se=10.879  t= +0.14  p=0.892  R2=0.000  n=80
+      asymmetric: pos b= +3.227 (t +0.34)   neg b= -5.773 (t -0.29)   R2=0.006
+  10y rn ~ signed                     b=  +4.059  se= 4.131  t= +0.98  p=0.326  R2=0.017  n=80
+  10y rn ~ |wedge|                    b=  -1.659  se= 5.666  t= -0.29  p=0.770  R2=0.001  n=80
+      asymmetric: pos b= +0.475 (t +0.10)   neg b=-10.475 (t -1.16)   R2=0.026
+  10y tp ~ signed                     b=  +0.080  se= 4.708  t= +0.02  p=0.986  R2=0.000  n=80
+  10y tp ~ |wedge|                    b=  +3.132  se= 7.762  t= +0.40  p=0.687  R2=0.002  n=80
+      asymmetric: pos b= +2.752 (t +0.37)   neg b= +4.702 (t +0.34)   R2=0.002
+
+
+Wrote /home/claude/rstar_wedge/results/results.json
