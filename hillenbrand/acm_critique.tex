@@ -1,0 +1,167 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm,booktabs,microtype}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue]{hyperref}
+\newtheorem{proposition}{Proposition}
+\newtheorem{corollary}{Corollary}
+\theoremstyle{remark}\newtheorem{remark}{Remark}
+\title{\vspace{-2em}\textbf{Affine Term-Structure Decompositions Cannot Identify\\ the Source of Announcement-Window Yield Movements}}
+\author{Research note}
+\date{11 August 2026}
+
+\begin{document}
+\maketitle
+\vspace{-1.5em}
+
+\begin{abstract}
+\noindent A growing literature decomposes the movement of long-term Treasury yields in windows around FOMC announcements into an expectations component and a term premium, and draws economic conclusions from the split. This note shows that in the Adrian--Crump--Moench (ACM) framework, and in any affine model with a fixed state vector spanned by the yield curve, the decomposition is a \emph{deterministic linear function of the contemporaneous curve movement}. It therefore contains no information beyond the shape of the yield response, and cannot serve as evidence about the economic source of that response. We further show that such a model misattributes a fixed fraction of a genuine permanent shift in the equilibrium rate to the term premium---empirically about 47\%---because its expectations component is, by construction, asymptotically constant. Both results are verified on the published ACM series.
+\end{abstract}
+
+\section{Setup}
+
+Let $X_t\in\mathbb{R}^K$ be the pricing state, the first $K$ principal components of yields, following a stationary Gaussian VAR(1)
+\begin{equation}
+X_{t+1}=\mu+\Phi X_t+v_{t+1},\qquad v_{t+1}\sim N(0,\Sigma),\qquad \rho(\Phi)<1,
+\end{equation}
+with the short rate affine in the state, $r_t=\delta_0+\delta_1'X_t$. Under the essentially-affine specification of prices of risk, zero-coupon yields are affine,
+\begin{equation}
+y_t^{(n)}=A_n+B_n'X_t .
+\end{equation}
+Write $\bar X=(I-\Phi)^{-1}\mu$ for the unconditional mean, so that $\mathbb{E}_t[X_{t+h}]=\bar X+\Phi^h(X_t-\bar X)$.
+
+The \emph{expectations} (risk-neutral) component of the $n$-period yield is the average expected future short rate under the physical measure,
+\begin{equation}
+rn_t^{(n)}\;=\;\frac1n\sum_{h=0}^{n-1}\mathbb{E}_t\!\left[r_{t+h}\right]
+\;=\;a_n+b_n'X_t,
+\end{equation}
+where
+\begin{equation}
+b_n'\;=\;\delta_1'\,\Psi_n,\qquad
+\Psi_n\;\equiv\;\frac1n(I-\Phi)^{-1}\!\left(I-\Phi^{\,n}\right),\qquad
+a_n=\delta_0+\delta_1'\bar X-b_n'\bar X .
+\label{eq:bn}
+\end{equation}
+The term premium is defined residually,
+\begin{equation}
+tp_t^{(n)}\;=\;y_t^{(n)}-rn_t^{(n)}\;=\;(A_n-a_n)+(B_n-b_n)'X_t .
+\end{equation}
+
+\section{The decomposition is a function of the curve}
+
+\begin{proposition}\label{prop:span}
+Let $\mathcal{N}=\{n_1,\dots,n_K\}$ be $K$ maturities such that $\mathbf{B}\equiv[B_{n_1},\dots,B_{n_K}]'$ is invertible, and let $y_t^{\mathcal N}$ collect the corresponding yields. Then for every maturity $n$,
+\begin{equation}
+\Delta rn_t^{(n)}=c_n'\,\Delta y_t^{\mathcal N},
+\qquad
+\Delta tp_t^{(n)}=\left(\iota_n-c_n\right)'\Delta y_t^{\mathcal N},
+\qquad
+c_n'\equiv b_n'\mathbf{B}^{-1},
+\label{eq:cn}
+\end{equation}
+where $\iota_n$ selects $y^{(n)}$ from $y^{\mathcal N}$. The weights $c_n$ depend only on estimated parameters.
+\end{proposition}
+
+\begin{proof}
+From (2), $y_t^{\mathcal N}=A^{\mathcal N}+\mathbf{B}X_t$, so $X_t=\mathbf{B}^{-1}(y_t^{\mathcal N}-A^{\mathcal N})$ and $\Delta X_t=\mathbf{B}^{-1}\Delta y_t^{\mathcal N}$. Substituting into $\Delta rn_t^{(n)}=b_n'\Delta X_t$ gives the first equality; the second follows from $\Delta tp=\Delta y-\Delta rn$.
+\end{proof}
+
+\begin{remark}
+Proposition~\ref{prop:span} implies that a regression of $\Delta rn_t^{(n)}$ on $K$ contemporaneous yield changes has $R^2=1$ exactly. The decomposition is a fixed relabelling of curve movements, not an additional measurement.
+\end{remark}
+
+\begin{corollary}[Event studies inherit the map]\label{cor:event}
+Consider an event study of a shock $z_t$,
+\[
+\Delta y_t^{(n)}=\alpha_n+\beta_n z_t+\varepsilon_{n,t},\qquad n\in\mathcal N\cup\{n\}.
+\]
+Then the estimated component responses satisfy, exactly,
+\begin{equation}
+\beta_n^{\,rn}=c_n'\beta^{\mathcal N},
+\qquad
+\beta_n^{\,tp}=\beta_n-c_n'\beta^{\mathcal N}.
+\end{equation}
+The split of an event-study response is a deterministic function of the estimated \emph{yield} response profile $\beta^{\mathcal N}$. Two shocks producing identical curve responses receive identical decompositions, whatever their economic sources. The decomposition therefore cannot constitute evidence about the source.
+\end{corollary}
+
+\section{The constant-endpoint bias}
+
+\begin{proposition}[Misattribution of a permanent endpoint shift]\label{prop:endpoint}
+Suppose the equilibrium short rate shifts permanently, immediately and credibly, $\delta_0\mapsto\delta_0+\kappa$. Then truly $\Delta rn^{(n)}=\kappa$ and $\Delta tp^{(n)}=0$ for every $n$, and the curve shifts in parallel, $\Delta y^{\mathcal N}=\kappa\boldsymbol{1}$. A model estimated with $(\delta,\Phi,\mu,\mathbf{B})$ held fixed reports
+\begin{equation}
+\widehat{\Delta rn}^{(n)}=\kappa\,(c_n'\boldsymbol{1}),
+\qquad
+\widehat{\Delta tp}^{(n)}=\kappa\left(1-c_n'\boldsymbol{1}\right).
+\end{equation}
+The attribution is correct if and only if $c_n'\boldsymbol{1}=1$.
+\end{proposition}
+
+\begin{proposition}[The expectations component is asymptotically deterministic]\label{prop:limit}
+Since $\rho(\Phi)<1$, $\|\Phi^{\,n}\|\to0$ and hence from \eqref{eq:bn}
+\begin{equation}
+b_n=\frac1n\,(I-\Phi')^{-1}\!\left(I-\Phi^{\,n\prime}\right)\delta_1\;\longrightarrow\;0
+\quad\text{as }n\to\infty,
+\qquad
+rn_t^{(n)}\;\longrightarrow\;\delta_0+\delta_1'\bar X .
+\end{equation}
+\end{proposition}
+
+\noindent Proposition~\ref{prop:limit} is the structural statement behind Proposition~\ref{prop:endpoint}. The model's expectations component at long maturities converges to a constant, because the model assumes the long-run mean of the short rate is one. It has no channel through which a time-varying equilibrium rate can enter $rn$. Consequently \emph{any} true variation in the endpoint is orthogonal to the model's expectations component and is absorbed, in full, by the residual that the literature labels the term premium. A test of ``did the endpoint move?'' conducted through such a decomposition has no power against the alternative, and mechanically returns the answer ``term premium.''
+
+\section{Empirical verification}
+
+We verify both propositions on the published ACM daily series, June 1989 to August 2026.
+
+\paragraph{Proposition~\ref{prop:span}.} Regressing $\Delta rn^{(10)}$ on daily changes in $\{1,2,3,5,7,10\}$-year yields gives $R^2=1.00000$. The fit is exact, as the proposition requires, and is unchanged across alternative spanning sets.
+
+\paragraph{Corollary~\ref{cor:event}.} We estimate the response of the yield curve to a one-percentage-point revision in the FOMC's longer-run federal funds projection, in a window $[t-1,t+1]$ around each of 56 SEP meetings:
+\[
+\beta^{\mathcal N}=(+0.4,\;+2.9,\;+10.8,\;+22.4,\;+28.1,\;+31.8)\ \text{bp at }1,2,3,5,7,10\text{ years}.
+\]
+Applying \eqref{eq:cn} to this profile predicts the component responses. Table~\ref{tab:one} compares the prediction with the directly estimated component responses.
+
+\begin{table}[h]\centering
+\caption{Predicted versus estimated component responses (basis points per percentage point)}\label{tab:one}
+\begin{tabular}{lcc}
+\toprule
+& Risk-neutral & Term premium\\
+\midrule
+Implied by $c_n'\beta^{\mathcal N}$ &$+2.5$ & $+29.3$\\
+Directly estimated & $+2.6$ & $+29.2$\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent The agreement is exact to estimation error. The finding that ``the Fed's longer-run projection moves the term premium and not expectations'' is, arithmetically, the statement that the front end of the curve did not move while the long end did.
+
+\paragraph{Proposition~\ref{prop:endpoint}.} The empirical weights give $c_{10}'\boldsymbol{1}=0.529$, stable across spanning sets ($0.52$--$0.57$). A permanent, credible one-percentage-point rise in the equilibrium short rate---an event that is $100\%$ expectations by construction---is therefore reported by ACM as $+53$ bp of expectations and $+47$ bp of term premium.
+
+\section{Implications}
+
+\begin{enumerate}
+\item Published decompositions of FOMC-window yield movements into expectations and term premia are re-expressions of the estimated curve response. They may be reported as descriptive summaries, but they cannot be cited as evidence for one economic mechanism over another.
+\item Studies of the secular decline in long rates are the worst case for this bias, because the object of interest---a shifting equilibrium rate---is precisely the object the model assumes away. Proposition~\ref{prop:limit} implies the bias runs systematically toward the term premium.
+\item Augmenting the state with an ``observed shifting endpoint'' $\tau_t$ resolves the bias \emph{only if} $\tau_t$ is measured independently of the curve. If $\tau_t=w'y_t$ for some loading $w$---for instance, a principal component of cumulative yield changes in announcement windows---then $rn_t$ remains affine in $y_t$, Proposition~\ref{prop:span} applies with modified weights, and the circularity is reinstated in a less visible form.
+\end{enumerate}
+
+\section{What restores identification}
+
+Identification requires an object outside the span of the curve, or a restriction on dynamics rather than on the contemporaneous cross-section.
+
+\paragraph{(a) Survey expectations.} Define $rn^{S,(n)}_t=\frac1n\sum_{h}\mathbb{E}^S_t[r_{t+h}]$ from surveys and $tp^{S,(n)}_t=y^{(n)}_t-rn^{S,(n)}_t$. Since $\mathbb{E}^S$ is measured independently of prices, Proposition~\ref{prop:span} does not apply. The cost is frequency: surveys are quarterly or semiannual, so daily event studies are unavailable and the method identifies levels rather than announcement responses.
+
+\paragraph{(b) Dynamic restrictions.} Estimate the cumulative response by local projection,
+\begin{equation}
+y^{(n)}_{t+h}-y^{(n)}_{t-2}=\alpha_h+\theta_h z_t+u_{t+h},\qquad h=0,1,\dots,H .
+\end{equation}
+A permanent endpoint revision implies $\theta_h\to\kappa\neq0$; a transitory risk-premium movement implies $\theta_h\to0$. This uses only realised yields and imposes no affine mapping, so it is immune to Propositions~\ref{prop:span}--\ref{prop:limit}. It is, on the present argument, the only route that identifies the source of an announcement-window movement at daily frequency.
+
+\paragraph{(c) Cross-sectional shape, read structurally.} The response profile $\beta^{\mathcal N}$ is itself model-free. An immediate, credible, permanent endpoint shift implies $\beta_n\approx\kappa$ for all $n$, including the shortest. The estimated profile above has $\beta_1=+0.4$ bp against $\beta_{10}=+31.8$ bp, which rejects that hypothesis without any decomposition. It does not, however, separate a term premium from a \emph{phased-in} expectations revision, since both load increasingly in maturity.
+
+\vspace{1em}
+\noindent\rule{\textwidth}{0.4pt}\\[0.4em]
+\footnotesize
+\textbf{Data.} Adrian, Crump \& Moench daily term-structure decomposition (\texttt{ACMY}, \texttt{ACMRNY}, \texttt{ACMTP}), June 1989--August 2026. FOMC longer-run projections from the Summary of Economic Projections dot-plot archive, 57 meetings, January 2012--March 2026; the right-hand-side variable is the revision in the cross-participant mean of the longer-run federal funds dot. Standard errors on the event study are Newey--West with four lags.
+
+\vspace{0.6em}
+\noindent\textbf{References.} Adrian, T., R. Crump and E. Moench (2013), ``Pricing the Term Structure with Linear Regressions,'' \emph{Journal of Financial Economics} 110(1), 110--138. \; Bauer, M. and G. Rudebusch (2020), ``Interest Rates under Falling Stars,'' \emph{American Economic Review} 110(5), 1316--1354. \; Crump, R., S. Eusepi and E. Moench (2018), ``The Term Structure of Expectations and Bond Yields,'' FRBNY Staff Report 775. \; Hillenbrand, S. (2025), ``The Fed and the Secular Decline in Interest Rates,'' \emph{Review of Financial Studies} 38(4), 981--1013. \; Kim, D. and J. Wright (2005), ``An Arbitrage-Free Three-Factor Term Structure Model,'' FEDS 2005-33.
+\end{document}

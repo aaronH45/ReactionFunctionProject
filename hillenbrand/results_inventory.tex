@@ -1,0 +1,191 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.05in]{geometry}
+\usepackage{amsmath,amssymb,booktabs}\usepackage[expansion=false]{microtype}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue]{hyperref}
+\usepackage{titlesec}
+\titleformat{\subsection}{\normalfont\large\bfseries}{\thesubsection}{0.7em}{}
+\newcommand{\qq}[1]{\vspace{0.3em}\noindent\textit{Question.}\ #1}
+\newcommand{\ia}[1]{\vspace{0.4em}\noindent\textbf{Identifying assumption.}\ #1}
+\newcommand{\res}[1]{\vspace{0.4em}\noindent\textbf{Result.}\ #1}
+\newcommand{\limn}[1]{\vspace{0.4em}\noindent\textbf{What it does not establish.}\ #1}
+\title{\vspace{-2.2em}\textbf{Surviving Results: Question, Specification, Identification}}
+\author{Working inventory}
+\date{11 August 2026}
+\begin{document}\maketitle\vspace{-1.6em}
+
+\noindent\rule{\textwidth}{0.4pt}
+\begin{center}\small
+Seven results, ordered by how much weight they will bear. Statistics are recomputed from the ACM daily\\ decomposition and the SEP dot-plot archive; nothing is taken from a prior write-up.
+\end{center}
+\noindent\rule{\textwidth}{0.4pt}
+
+\section{Tier 1: unclaimed and model-free}
+
+\subsection{The decomposition of the pre-announcement decline depends on the event list}
+
+\qq{Is the attribution of the day-$(t\!-\!1)$ yield decline to expectations versus term premium robust to the definition of an FOMC ``announcement''?}
+
+\vspace{0.4em}\noindent\textit{Specification.} For an event set $\mathcal E$, a sample window $[T_0,T_1]$, and a component $x\in\{y,rn,tp\}$, define the cumulative day-$(t+k)$ contribution
+\begin{equation}
+C_k(x;\mathcal E,T_0,T_1)\;=\;\sum_{\tau\in\mathcal E,\;T_0\le\tau\le T_1}\left(x_{\tau+k}-x_{\tau+k-1}\right),
+\end{equation}
+and the reported share $s_k=C_k(tp)/C_k(y)$. We evaluate at $k=-1$ for two event sets --- $\mathcal E_{\text{sch}}$, the 297 regularly scheduled meetings, and $\mathcal E_{\text{all}}=\mathcal E_{\text{sch}}\cup\mathcal E_{\text{uns}}$, adding 68 conference calls and unscheduled actions --- crossed with three samples.
+
+\ia{None. This is a within-model robustness statement: the same series, the same decomposition, different subsets of the same event index. No exclusion restriction is required because no causal effect is estimated. The only substantive requirement is that the objects we compute correspond to the objects the two papers report, which is verified by replication below.}
+
+\res{The term-premium share of the day-$(t\!-\!1)$ decline (cumulative pp):}
+\begin{table}[h]\centering\small
+\begin{tabular}{llrrrrr}
+\toprule
+Event list & Sample & $n$ & Yield & Risk-neutral & Term prem. & TP share\\
+\midrule
+Scheduled only & Sep 1994 -- Jun 2021 & 214 & $-1.82$ & $-0.49$ & $-1.33$ & 73\%\\
+Scheduled only & Jun 1989 -- Jun 2021 & 256 & $-2.06$ & $-0.43$ & $-1.63$ & 79\%\\
+Scheduled only & Sep 1994 -- Aug 2026 & 255 & $-2.03$ & $-0.19$ & $-1.85$ & \textbf{91\%}\\
+All meetings & Sep 1994 -- Jun 2021 & 246 & $-2.83$ & $-1.49$ & $-1.34$ & 47\%\\
+All meetings & Jun 1989 -- Jun 2021 & 324 & $-3.60$ & $-2.20$ & $-1.40$ & \textbf{39\%}\\
+All meetings & Sep 1994 -- Aug 2026 & 287 & $-3.05$ & $-1.19$ & $-1.86$ & 61\%\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent Replication of Pan \& Peng on their specification (scheduled, Sep 1994 -- Dec 2025, $n=250$), day $t\!-\!1$:
+\begin{center}\small
+\begin{tabular}{lcc}
+\toprule
+& Ours & Reported\\ \midrule
+10y yield & $-0.785$ ($t\,{-}2.39$) & $-0.79$ ($t\,{-}2.39$)\\
+Term premium & $-0.716$ ($t\,{-}2.36$) & $-0.71$ ($t\,{-}2.34$)\\
+Expected short rate & $-0.070$ ($t\,{-}0.31$) & $-0.08$ ($t\,{-}0.26$)\\
+\bottomrule\end{tabular}
+\end{center}
+
+\noindent The mechanism is arithmetic. Differencing the two event sets,
+\begin{equation}
+C_{-1}(rn;\mathcal E_{\text{all}})-C_{-1}(rn;\mathcal E_{\text{sch}})=\sum_{\tau\in\mathcal E_{\text{uns}}}\left(rn_{\tau-1}-rn_{\tau-2}\right)=-1.77\ \text{pp over }68\text{ events},
+\end{equation}
+about $-2.6$ bp per unscheduled event against a scheduled-meeting average near $-0.2$ bp. Emergency intermeeting actions are preceded by days of expectations repricing; scheduled announcements are not.
+
+\limn{Which event list is correct. The result is that the reported statistic is a function of a choice neither paper discusses, not that either choice is wrong.}
+
+\subsection{The two window days have different curve shapes --- suggestively}
+
+\qq{Do the days inside the three-day window carry the same kind of shock?}
+
+\vspace{0.4em}\noindent\textit{Specification.} For window day $k$ and maturity $n$, let
+\begin{equation}
+\beta_n^{k}=\frac{1}{|\mathcal E|}\sum_{\tau\in\mathcal E}\left(y^{(n)}_{\tau+k}-y^{(n)}_{\tau+k-1}\right),
+\qquad
+\text{slope}^{k}\equiv\beta_1^{k}-\beta_{10}^{k}.
+\end{equation}
+Tests are paired across events, so standard errors account for the common shock.
+
+\ia{A mapping from shock class to profile shape. Write the shock as a revision $\kappa_h$ to the expected short rate at horizon $h$, plus a revision $\delta_n$ to the term premium. Then
+\begin{equation}
+\beta_n=\underbrace{\frac1n\sum_{h<n}\kappa_h}_{\text{expectations}}+\;\delta_n .
+\end{equation}
+An \emph{immediate, permanent} endpoint revision sets $\kappa_h=\kappa$ for all $h$ and $\delta_n=0$, giving $\beta_n=\kappa$ for every $n$: a \textbf{flat} profile, slope zero. A \emph{duration risk-price} shock sets $\kappa_h=0$ and $\delta_n=\delta\,g(n)$ with $g(0)=0$ and $g'>0$, giving $\beta_1\approx0$ and a \textbf{rising} profile, slope positive. The identifying content is that these generate non-nested shapes.}
+
+\res{Slopes, by day and specification:}
+\begin{table}[h]\centering\small
+\begin{tabular}{lcccc}
+\toprule
+Specification & $n$ & slope on $t\!-\!1$ & slope on $t$ & difference\\
+\midrule
+Scheduled, Sep 1994 -- Dec 2025 & 250 & $+0.820$ ($t\,3.03$) & $+0.159$ ($t\,0.44$) & $+0.661$ ($t\,1.47$)\\
+All meetings, Sep 1994 -- Dec 2025 & 282 & $+0.696$ ($t\,2.55$) & $-0.218$ ($t\,{-}0.57$) & $+0.914$ ($t\,2.04$)\\
+All meetings, Jun 1989 -- Jun 2021 & 324 & $+0.412$ ($t\,1.64$) & $-0.368$ ($t\,{-}1.06$) & $+0.780$ ($t\,1.97$)\\
+\bottomrule\end{tabular}
+\end{table}
+
+\noindent The day-$(t\!-\!1)$ slope is positive and significant in two of three specifications; the day-$t$ slope is never distinguishable from flat. On Pan \& Peng's sample the front-end response on $t\!-\!1$ is $+0.035$ bp ($t=0.12$), so $\beta_1=0$ cannot be rejected while $\beta_1=\beta_{10}$ is rejected at $t=3.03$ --- the duration signature. On the same sample, day $t$ has $\beta_1=\beta_{10}$ unrejected ($t=0.44$) --- the endpoint signature. ACM's labels agree: 91\% term premium on $t\!-\!1$, 77\% risk-neutral on $t$.
+
+\limn{Three things. First, the difference between the two days is marginal ($t=1.47$ to $2.04$). Second, the front-end response on $t\!-\!1$ is $+0.035$ bp on the scheduled sample but $-0.700$ ($t\,{-}2.64$) on the full 1989 list, so the ``front end does not move'' claim is sample-specific --- which is the same event-list dependence as \S1.1, expressed model-free. Third, and structurally: a \emph{phased-in} expectations revision, $\kappa_h$ increasing in $h$, also produces a rising profile. The shape rejects an \emph{immediate} endpoint revision on $t\!-\!1$; it does not separate a term premium from a gradual one.}
+
+\section{Tier 2: measurement and diagnostics}
+
+\subsection{The SEP median discards most of the identifying variation}
+
+\qq{Does the choice of cross-participant statistic in the dot plot affect inference?}
+
+\ia{A coarsening model. Let $\theta_t$ be the committee's latent longer-run view and let participant $i$ report
+$x_{i,t}=\mathrm{round}_{\Delta}\!\left(\theta_t+\varepsilon_{i,t}\right)$ on the SEP's $\Delta=0.125$ grid, with $\varepsilon_{i,t}$ iid and continuously distributed. Then $\overline{x}_t=N^{-1}\sum_i x_{i,t}=\theta_t+O_p(N^{-1/2})$, while $\mathrm{med}_i(x_{i,t})$ is a step function of $\theta_t$ that changes only when the median participant crosses a grid point. The median is therefore a coarsened measurement of the same object, not a different object.}
+
+\res{Over 57 SEP meetings, January 2012 -- March 2026:}
+\begin{center}\small
+\begin{tabular}{lrrrr}
+\toprule
+Statistic & Distinct values & Meetings it moves & Longest flat run & s.d.\\ \midrule
+Median of dots & 12 & 19 / 56 & 9 meetings & 0.591\\
+Mean of dots & 48 & \textbf{47 / 56} & 2 meetings & 0.563\\
+\bottomrule\end{tabular}
+\end{center}
+\noindent Levels correlate $0.989$; changes correlate only $0.715$. In the event-study regression of \S2.3, every coefficient is insignificant using the median and significant using the mean. Hillenbrand's published Figure~9 uses the mean, which we verify by replication (the median would be visibly stepped and is not).
+
+\limn{That the mean is the correct object of economic interest. The claim is measurement: given a latent committee view, the mean is the better-behaved estimator, and the median's coarseness is a power problem rather than a conceptual choice.}
+
+\subsection{The affine decomposition is a fixed linear filter of the curve response}
+
+\qq{Does an affine term-structure decomposition add event-specific information to an event study?}
+
+\ia{None beyond the model's own structure: a spanned Gaussian affine model with state $X_t$, $y_t^{(n)}=A_n+B_n'X_t$, and $K$ maturities $\mathcal N$ for which $\mathbf B=[B_{n_1},\dots,B_{n_K}]'$ is invertible.}
+
+\res{Since $\Delta X_t=\mathbf B^{-1}\Delta y_t^{\mathcal N}$ and $rn_t^{(n)}=a_n+b_n'X_t$,}
+\begin{equation}
+\Delta rn_t^{(n)}=c_n'\,\Delta y_t^{\mathcal N},\qquad c_n'\equiv b_n'\mathbf B^{-1},
+\end{equation}
+so for an event study $\Delta y^{(n)}_t=\alpha_n+\beta_n z_t+\varepsilon_{n,t}$ the component responses satisfy exactly
+\begin{equation}
+\beta_n^{rn}=c_n'\beta^{\mathcal N},\qquad \beta_n^{tp}=\beta_n-c_n'\beta^{\mathcal N}.
+\end{equation}
+Empirically, regressing $\Delta rn^{(10)}$ on daily changes at $\{1,2,3,5,7,10\}$ years gives $R^2=1.00000$. Applying $c_n$ to the estimated profile of \S2.3 predicts $+2.5$ and $+29.3$ bp against directly estimated $+2.6$ and $+29.2$. The weights give $c_{10}'\boldsymbol 1=0.529$, stable at $0.52$--$0.57$ across spanning sets.
+
+\limn{Novelty. The algebra is a corollary of Joslin, Singleton \& Zhu (2011) and is stated as a criticism at monthly frequency by Joslin, Priebsch \& Singleton (2014); Duffee (2011) shows invertibility can fail outright. The bias implied by $c'\boldsymbol 1<1$ is Bauer \& Rudebusch (2020), who report 75\% versus 35--37\% for the secular decline, and Bauer \& Rudebusch (2014), who report the $\approx$50/50 event-window figure. The contribution here is the explicit filter for ACM, not the theorem. Note also that the decomposition does import information --- the historically estimated $P$-dynamics --- so the correct claim is that it adds no \emph{event-specific} information.}
+
+\subsection{A longer-run SEP revision moves the long end and not the front end}
+
+\qq{What does a revision in the FOMC's longer-run projection do to the yield curve?}
+
+\vspace{0.4em}\noindent\textit{Specification.} With $\Delta r^*_t$ the revision in the cross-participant mean longer-run dot relative to the previous SEP, and the window $[t-1,t+1]$,
+\begin{equation}
+y^{(n)}_{t+1}-y^{(n)}_{t-1}=\alpha_n+\beta_n\,\Delta r^*_t+\gamma_n\,\Delta y^{(2)}_t+\eta_n\,m_t+\varepsilon_{n,t},
+\end{equation}
+where $\Delta y^{(2)}$ is the two-year window change (the near-term policy surprise) and $m_t$ is the market's own intermeeting drift, measured from the previous SEP to $t-2$. Newey--West, four lags, 56 revisions.
+
+\ia{$\mathbb E[\varepsilon_{n,t}\,\Delta r^*_t]=0$ conditional on the controls --- the revision is orthogonal to other news released in the window. This is the binding assumption and it is not innocuous: Bauer \& Swanson (2023) show announcement surprises are predictable from pre-meeting public information, and a projection revision is partly anticipated. The two controls absorb the near-term policy surprise and the market's own three-month drift, but not everything.}
+
+\res{$\beta=(+0.4,\,+2.9,\,+10.8,\,+22.4,\,+28.1,\,+31.8)$ bp per pp at $1,2,3,5,7,10$ years. At ten years, $+31.8$ ($t\,1.96$) unconditionally; $+29.4$ ($t\,4.21$) with the two-year control; $+30.4$ ($t\,1.87$) with the intermeeting control. A randomisation test assigning the same 56 revisions to randomly timed windows on non-SEP days gives $p=0.019$ for the term-premium component.}
+
+\limn{The component label. By \S2.2 the split is determined by this profile, and by \S1.2 a rising profile is consistent with both a duration premium and a phased-in expectations revision. What survives is the model-free statement: the Fed's longer-run projection moves the long end and leaves the front end untouched. Also note instability --- subsample coefficients of $+53.9$, $+8.4$, $+90.2$ across 2012--16, 2017--21 and 2022--26 --- and that a one-standard-deviation revision (0.072 pp) moves the ten-year by only 2.1 bp.}
+
+\section{Tier 3: real but thin}
+
+\subsection{The premium neither builds up before nor rebuilds after}
+
+\qq{Over what horizon does an announcement risk premium accrue, and where is the offsetting rebuild?}
+
+\ia{A stationarity implication rather than an exclusion restriction. If the in-window decline is a repeatedly harvested premium on a stationary yield, the premium level must be restored between announcements, so non-window days must carry a positive drift summing to the in-window decline. We test that implication, not a causal effect.}
+
+\res{Mean daily 10y change by block, all 365 events, Jun 1989 -- Jun 2021: $t\!-\!12$ to $t\!-\!3$, $+0.008$ bp/day ($t\,0.08$), cumulating $+0.08$ bp; window $t\!-\!1$ to $t\!+\!1$, $-0.656$ ($t\,{-}3.10$), cumulating $-1.97$ bp; $t\!+\!2$ to $t\!+\!6$, $+0.031$ ($t\,0.21$); $t\!+\!7$ to $t\!+\!15$, $-0.082$ ($t\,{-}0.74$). No buildup, no rebuild. The literature places the pre-FOMC drift at one day in equities (Lucca \& Moench) and finds no Treasury drift at all; the multi-day horizon in US Treasuries is unstudied.}
+
+\limn{Power. A full rebuild requires $+0.096$ bp/day across the 21.7 non-window days per cycle; the estimate is $-0.011$ with a standard error of $0.067$, so the required value is only $1.5$ standard errors away and cannot be rejected. The 95\% interval on the cumulative non-window change is $\pm9.2$ pp.}
+
+\subsection{The market has already moved before the projection is published}
+
+\qq{Is the Fed's published longer-run view news, or a summary of what is already priced?}
+
+\vspace{0.4em}\noindent\textit{Specification.} With $m_t$ the change in the 10-year yield from the previous SEP to $t-2$,
+\begin{equation}
+m_t=\alpha+\lambda\,\Delta r^*_t+u_t .
+\end{equation}
+
+\ia{None, because no causal claim is made. The regressor is announced at the \emph{end} of the period over which the dependent variable is measured, so $\lambda>0$ cannot distinguish the market anticipating the FOMC from both responding to common data. For the claim at issue --- that the announcement is not where this information first enters prices --- either mechanism suffices.}
+
+\res{$\lambda=+182.5$ bp per pp ($t\,4.26$) intermeeting against $+31.8$ ($t\,1.96$) inside the window, a ratio of about six. Conditioning the window regression on $m_t$ leaves the term-premium response intact ($+30.9$, $t\,3.60$) with the control itself insignificant.}
+
+\limn{Magnitude. $R^2=0.107$, and decomposing the cumulative path, the intercept contributes $+446$ bp over 56 meetings against $-190$ bp from the revision-related part. Most intermeeting movement has nothing to do with the Fed's eventual revision.}
+
+\vspace{1.2em}\noindent\rule{\textwidth}{0.4pt}\\[0.3em]
+\footnotesize
+\textbf{Data.} Adrian--Crump--Moench daily decomposition (\texttt{ACMY}, \texttt{ACMRNY}, \texttt{ACMTP}), June 1989 -- August 2026. G\"urkaynak--Sack--Wright zero-coupon yields for the replication of the window fact. FOMC calendar retrieved from Federal Reserve historical meeting pages: 297 scheduled meetings 1989--2026 plus 68 conference calls and unscheduled actions. SEP dot-plot archive, 57 meetings, January 2012 -- March 2026.
+\end{document}

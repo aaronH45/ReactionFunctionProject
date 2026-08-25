@@ -1,0 +1,152 @@
+\section{Framework: intercept disagreement in an opinionated-markets model}
+\label{sec:framework}
+
+Caballero \& Simsek (2022) study a Fed and a market that disagree, each confident in its own
+view, with the Fed setting policy on its belief and the market pricing assets knowing it will.
+The market therefore anticipates policy ``mistakes'' and prices the resulting risk. Their state
+variable is aggregate demand. This section runs the same logic with the disagreement located in
+the \emph{intercept of the policy rule}, and the change of state variable turns out to matter:
+demand disagreement mean-reverts, whereas disagreement about a constant does not, and that
+difference generates predictions their model does not make.
+
+\subsection{Setup}
+
+Both parties know the rule and observe the state. They differ only in the neutral real rate:
+the Fed believes $r^{*F}$, the market believes $r^{*m}$, and
+\begin{equation}
+\delta_t \;\equiv\; r^{*m}_t - r^{*F}_t .
+\label{eq:delta}
+\end{equation}
+The Fed sets policy on its own estimate,
+\begin{equation}
+i_t \;=\; r^{*F}_t + \pi^{*} + \phi_\pi\!\left(\pi_t - \pi^{*}\right) + \phi_x x_t ,
+\qquad \phi_\pi > 1 ,
+\label{eq:rule}
+\end{equation}
+and the market evaluates the resulting stance against \emph{its} neutral rate, perceiving policy
+to be $\delta_t$ looser than the Fed intends.
+
+\subsection{The market's steady state is not the Fed's}
+
+Suppose the disagreement persists and the economy settles. In any steady state the real rate
+equals the market's neutral rate, $i - \pi = r^{*m}$. Substituting \eqref{eq:rule},
+\[
+r^{*m} \;=\; r^{*F} + \pi^{*} + \phi_\pi(\pi-\pi^{*}) - \pi
+\qquad\Longrightarrow\qquad
+\left(\phi_\pi-1\right)\left(\pi-\pi^{*}\right) \;=\; \delta ,
+\]
+so the market expects inflation to settle permanently away from target at
+\begin{equation}
+\boxed{\;\pi - \pi^{*} \;=\; \frac{\delta_t}{\phi_\pi - 1}\;}
+\label{eq:bias}
+\end{equation}
+A Fed that underestimates the neutral rate holds policy too easy forever, and under a rule with
+$\phi_\pi>1$ the only way the rule can be satisfied is with inflation permanently above target.
+The macro half of this is Orphanides' account of the Great Inflation --- a mismeasured natural
+rate producing a sustained inflation bias --- imported here as a belief the \emph{market} holds
+about the Fed.
+
+\subsection{The amplification result}
+
+The nominal endpoint the market prices is $r^{*m} + \pi^{*} + \delta/(\phi_\pi-1)$; the endpoint
+the FOMC publishes is $r^{*F} + \pi^{*}$. The difference is
+\begin{equation}
+\boxed{\;\underbrace{i^{*m}_t - i^{*F}_t}_{\text{priced endpoint gap}} \;=\; \frac{\phi_\pi}{\phi_\pi-1}\;\delta_t\;}
+\label{eq:amplification}
+\end{equation}
+\emph{A small disagreement about $r^{*}$ implies a large disagreement about where nominal rates
+settle}, with the multiplier set by the perceived aggressiveness of the rule:
+
+\begin{center}\small
+\begin{tabular}{lccc}
+\toprule
+$\phi_\pi$ & inflation bias per 1 pp of $\delta$ & endpoint gap per 1 pp of $\delta$ & endpoint gap when sd$(\delta)=0.105$\\ \midrule
+1.25 & 4.00 & 5.00 & 52 bp\\
+1.50 & 2.00 & 3.00 & 32 bp\\
+2.00 & 1.00 & 2.00 & 21 bp\\
+2.50 & 0.67 & 1.67 & 18 bp\\
+\bottomrule\end{tabular}
+\end{center}
+
+\noindent This reverses the reading of Fact~2. The measured Fed-minus-dealer $r^{*}$ gap has a
+standard deviation of only 10 bp, which looked fatal for any design built on $\delta$. Through
+\eqref{eq:amplification} that same gap implies 18--52 bp of disagreement about the nominal
+endpoint --- an order of magnitude that moves long yields. The smallness of the $r^{*}$ gap is a
+prediction of the model, not an obstacle to it: disagreements about the intercept are arbitraged
+down in the $r^{*}$ dimension precisely because they are amplified in the priced dimension.
+
+\subsection{Pricing, with the maturity profile derived rather than imposed}
+
+Let the disagreement decay as the Fed learns, $E_t[\delta_{t+j}] = (1-\mu)^{j}\delta_t$, and let
+the inflation bias build with the Phillips-curve pass-through, so that the bias at horizon $j$ is
+$\lambda_j \delta_t$ with
+\begin{equation}
+\lambda_j \;=\; \frac{1}{\phi_\pi-1}\underbrace{\left(1-e^{-\kappa j}\right)}_{\text{bias builds}}\underbrace{\left(1-\mu\right)^{j}}_{\text{Fed learns}} .
+\label{eq:lambda}
+\end{equation}
+Averaging expected short rates then gives
+\begin{equation}
+y^{(n)}_t \;=\; \underbrace{r^{*m}_t + \pi^{*}}_{\text{market endpoint}}
+\;+\; \underbrace{\omega(\rho,n)\,\text{gap}_t}_{\text{stance}}
+\;+\; \underbrace{\Lambda(n)\,\delta_t}_{\text{perceived error}}
+\;+\; \underbrace{TP^{(n)}\!\left(\sigma^{2}_{\delta,t}\right)}_{\text{disagreement premium}} ,
+\qquad \Lambda(n)=\frac1n\sum_{j<n}\lambda_j .
+\label{eq:pricing}
+\end{equation}
+$\Lambda(n)$ is now a derived object with a hump: it is near zero at short maturities because the
+bias has not yet accumulated, peaks where the build-up and the learning decay cross, and falls
+away as $(1-\mu)^j$ dominates. \textbf{The peak location is pinned by $\kappa$ and $\mu$ alone},
+both estimable outside the event sample, so the hump is falsifiable in a way an asserted shape
+is not.
+
+\subsection{Predictions}
+
+\begin{enumerate}\setlength\itemsep{0.25em}
+\item \textbf{Amplification.} The gap between the market-implied nominal endpoint and the FOMC's
+published dot is $\phi_\pi/(\phi_\pi-1)$ times the measured $r^{*}$ gap. Both sides are
+observable, so the ratio \emph{identifies the market's perceived $\phi_\pi$} --- which can then
+be compared against the survey-based estimates of Bauer, Pflueger \& Sunderam (2024). An
+over-identifying restriction, not a free parameter.
+\item \textbf{A composition restriction on the TIPS split.} The endpoint gap divides into
+$\delta$ in the real dimension and $\delta/(\phi_\pi-1)$ in the inflation dimension, so
+\[
+\frac{\text{real endpoint gap}}{\text{breakeven gap}} \;=\; \phi_\pi - 1 .
+\]
+At $\phi_\pi=1.5$ breakevens should move twice as much as real forwards, \emph{in the same
+direction}. This is sharper than a sign prediction and it is testable on observed nominal and
+TIPS curves with no decomposition of either.
+\item \textbf{Sign.} $\delta>0$ --- the Fed's $r^{*}$ below the market's --- means policy is
+perceived too easy, so both the inflation bias and the endpoint gap are positive. $\delta<0$
+reverses both.
+\item \textbf{Maturity profile.} $\Lambda(n)$ is hump-shaped with a peak determined by $\kappa$
+and $\mu$; the stance term $\omega(\rho,n)$ declines monotonically; the endpoint enters flat.
+Three distinguishable shapes.
+\item \textbf{State dependence, and a link to the perceived-slope literature.} The multiplier
+$\phi_\pi/(\phi_\pi-1)$ is decreasing in $\phi_\pi$: \emph{the same $r^{*}$ disagreement matters
+more when markets believe the Fed responds weakly}. Intercept disagreement and slope perception
+are complements, not rival explanations, which is a testable interaction rather than a
+positioning claim.
+\item \textbf{The premium.} Uncertainty about $\delta$ propagates into the whole expected path
+undamped by horizon, so term-premium sensitivity to $\sigma^2_\delta$ should rise with maturity
+and not decay --- unlike stance uncertainty, which is damped by $\omega$.
+\end{enumerate}
+
+\subsection{What the model assumes, stated plainly}
+
+\emph{Dogmatic disagreement.} Prediction 1 rests on the market expecting the Fed \emph{not} to
+learn quickly. With fast learning ($\mu$ large) the steady state is never approached and the
+amplification shrinks toward $\delta$ itself; $\mu$ is therefore the parameter the amplification
+result lives or dies on, and it is estimable from the observed persistence of the Fed-dealer gap.
+
+\emph{The Taylor principle.} Everything here requires $\phi_\pi>1$, and the multiplier diverges
+as $\phi_\pi\to1$. That is not a defect --- it is the model saying intercept errors are
+catastrophic for a weakly-responding central bank --- but it means the empirical work must
+bound $\phi_\pi$ away from one, and estimates near the boundary should be treated as evidence
+against the specification rather than as very large effects.
+
+\emph{Whose endpoint anchors the yield.} \eqref{eq:pricing} anchors on $r^{*m}$, the market's
+belief, which is the correct choice for a pricing equation and the opposite of the earlier draft.
+The Fed's estimate enters only through the bias term. If instead one believes realised short
+rates are generated by the Fed's rule regardless of the truth, the anchor is
+$\theta r^{*m} + (1-\theta)r^{*F}$; $\theta$ is estimable from the maturity profile and nests
+both readings.

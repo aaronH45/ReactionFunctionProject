@@ -1,0 +1,54 @@
+\subsection{What a window response can contain}
+\label{sec:framework}
+
+Start from the definition of a long yield as an average of expected short rates plus a residual:
+\begin{equation}
+y^{(n)}_t \;=\; \underbrace{\frac{1}{n}\sum_{j=0}^{n-1} E_t\!\left[i_{t+j}\right]}_{\text{expectations component } rn^{(n)}_t} \;+\; TP^{(n)}_t .
+\label{eq:eh}
+\end{equation}
+This is a definition, not an assumption: $TP^{(n)}_t$ is whatever is left over.
+
+Define the neutral nominal rate and the policy gap,
+\begin{equation}
+i^{*}_t \;\equiv\; r^{*}_t + \pi^{*}_t ,
+\qquad
+\text{gap}_t \;\equiv\; i_t - i^{*}_t
+\;=\; \underbrace{\left(i_t - E_t\pi_{t+1} - r^{*}_t\right)}_{\text{real policy stance}}
+\;+\; \underbrace{\left(E_t\pi_{t+1} - \pi^{*}_t\right)}_{\text{inflation deviation}} ,
+\label{eq:gapdef}
+\end{equation}
+so that under a Taylor-type rule
+$\text{gap}_t = \phi_\pi(\pi_t-\pi^{*}_t) + \phi_x x_t + v_t$: the gap is the stance of policy,
+cyclical and mean-reverting.
+
+Substituting \eqref{eq:gapdef} into \eqref{eq:eh}, and assuming the endpoints are locally
+martingales, $E_t[r^{*}_{t+j}] = r^{*}_t$ and $E_t[\pi^{*}_{t+j}] = \pi^{*}_t$, gives the
+identity:
+\begin{equation}
+\boxed{\;
+y^{(n)}_t \;=\; r^{*}_t \;+\; \pi^{*}_t \;+\; \frac{1}{n}\sum_{j=0}^{n-1} E_t\!\left[\text{gap}_{t+j}\right] \;+\; TP^{(n)}_t \;}
+\label{eq:identity}
+\end{equation}
+
+If the gap mean-reverts as an AR(1) with monthly persistence $\rho$, the expected-gap term
+collapses to a scalar times today's stance,
+\begin{equation}
+\frac{1}{n}\sum_{j=0}^{n-1} E_t\!\left[\text{gap}_{t+j}\right] \;=\; \omega(\rho,n)\,\text{gap}_t ,
+\qquad
+\omega(\rho,n) \;=\; \frac{1-\rho^{\,n}}{n\,(1-\rho)} ,
+\label{eq:omega}
+\end{equation}
+and for a forward rate covering periods $n_1$ through $n_1+n_2-1$ the analogous weight is
+$\omega^{f}(\rho,n_1,n_2) = \rho^{\,n_1}\left(1-\rho^{\,n_2}\right)\big/\left[n_2(1-\rho)\right]$.
+
+Differencing \eqref{eq:identity} over an announcement window:
+\begin{equation}
+\boxed{\;
+\Delta y^{(n)}_t \;=\;
+\underbrace{\Delta r^{*}_t + \Delta \pi^{*}_t}_{\text{endpoint news}}
+\;+\; \underbrace{\omega\,\Delta\text{gap}_t \;+\; \text{gap}_t\,\Delta\omega}_{\text{stance and persistence news}}
+\;+\; \Delta TP^{(n)}_t \;}
+\label{eq:windowdiff}
+\end{equation}
+
+\noindent Four terms, one observable.

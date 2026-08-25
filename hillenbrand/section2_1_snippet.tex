@@ -1,0 +1,138 @@
+\subsection{Unpacking the identity}
+\label{sec:identity}
+
+The reason this leads directly to \rs{} is an accounting identity, and it is worth writing
+out in full because the interesting term is the one usually waved away.
+
+Start from the definition of a long yield as an average of expected short rates plus a
+residual:
+\begin{equation}
+y^{(n)}_t \;=\; \underbrace{\frac{1}{n}\sum_{j=0}^{n-1} E_t\!\left[i_{t+j}\right]}_{\text{expectations component } rn^{(n)}_t} \;+\; TP^{(n)}_t .
+\label{eq:eh}
+\end{equation}
+This is a definition, not an assumption: $TP^{(n)}_t$ is whatever is left over.
+
+Now split the nominal policy rate into a neutral level and a deviation from it. Define the
+\emph{neutral nominal rate} and the \emph{policy gap}
+\begin{equation}
+i^{*}_t \;\equiv\; r^{*}_t + \pi^{*}_t ,
+\qquad
+\text{gap}_t \;\equiv\; i_t - i^{*}_t \;=\; \underbrace{\left(i_t - E_t\pi_{t+1} - r^{*}_t\right)}_{\text{real policy stance}} \;+\; \underbrace{\left(E_t\pi_{t+1} - \pi^{*}_t\right)}_{\text{inflation deviation}} ,
+\label{eq:gapdef}
+\end{equation}
+where $r^{*}_t$ is the equilibrium real rate and $\pi^{*}_t$ the long-run inflation
+anchor. The gap is therefore \textbf{the stance of policy}: how far the Fed is holding the
+short rate above or below the level that would be neutral, plus how far inflation is
+expected to run from its anchor. Under a Taylor-type rule
+$i_t = i^{*}_t + \phi_\pi(\pi_t-\pi^{*}_t) + \phi_x x_t + v_t$, the gap is exactly the
+systematic and discretionary response to the cycle,
+\begin{equation}
+\text{gap}_t \;=\; \phi_\pi\!\left(\pi_t-\pi^{*}_t\right) + \phi_x x_t + v_t .
+\label{eq:taylor}
+\end{equation}
+It is a cyclical, mean-reverting object: it is large in 1994, in 2008 and in 2023, and zero
+on average.
+
+Substituting \eqref{eq:gapdef} into \eqref{eq:eh} and adding the assumption that the
+endpoints are (locally) martingales, $E_t[r^{*}_{t+j}]=r^{*}_t$ and
+$E_t[\pi^{*}_{t+j}]=\pi^{*}_t$, gives the identity used throughout:
+\begin{equation}
+y^{(n)}_t \;=\; r^{*}_t \;+\; \pi^{*}_t \;+\; \frac{1}{n}\sum_{j=0}^{n-1} E_t\!\left[\text{gap}_{t+j}\right] \;+\; TP^{(n)}_t .
+\label{eq:identity}
+\end{equation}
+
+\subsubsection*{How much does the gap term actually contribute?}
+
+The usual move at this point is to say the gap ``averages out'' at a ten-year horizon. That
+is too quick, and it is the step I initially got wrong. If the gap mean-reverts as an AR(1)
+with monthly persistence $\rho$, the expected-gap term collapses to a single scalar times
+today's stance,
+\begin{equation}
+\frac{1}{n}\sum_{j=0}^{n-1} E_t\!\left[\text{gap}_{t+j}\right]
+\;=\; \omega(\rho,n)\,\text{gap}_t ,
+\qquad
+\omega(\rho,n) \;=\; \frac{1-\rho^{\,n}}{n\,(1-\rho)} ,
+\label{eq:omega}
+\end{equation}
+and for a forward rate covering periods $n_1$ through $n_1+n_2-1$ the analogous weight is
+$\omega^{f} = \rho^{n_1}\left(1-\rho^{n_2}\right)\big/\left[n_2(1-\rho)\right]$.
+
+Two objects enter $\omega$: the maturity $n$, which is known, and the persistence $\rho$,
+which is a \emph{belief} and is not directly observed. So the relevant exercise is a
+sensitivity analysis over $\rho$, expressed as the half-life of a stance deviation --- the
+time markets expect a 100 bp deviation from neutral to decay to 50 bp:
+
+\begin{center}\small
+\begin{tabular}{lcccc}
+\toprule
+Half-life of the gap & $\omega$, 2-year & $\omega$, 5-year & $\omega$, 10-year & $\omega^{f}$, 5y5y forward\\ \midrule
+1 year  & 0.56 & 0.29 & 0.15 & 0.01\\
+2 years & 0.73 & 0.48 & 0.28 & 0.09\\
+3 years & 0.81 & 0.60 & 0.39 & 0.19\\
+4 years & 0.85 & 0.67 & 0.48 & 0.28\\
+5 years & 0.88 & 0.73 & 0.54 & 0.36\\
+\bottomrule\end{tabular}
+\end{center}
+
+\noindent The upper rows are not the empirically relevant ones. Estimating an AR(1) on a
+crude gap proxy --- the one-year yield less (HLW $r^{*}$ plus 2) --- at monthly frequency gives
+a half-life of 4.4 years on the full sample, 5.0 years post-1985 and 4.1 years post-1995. The
+bottom rows of the table are where the data sits, so $\omega(10\text{y}) \approx 0.5$: a 100 bp
+revision to the expected stance --- with no change whatsoever in \rs{}, $\pi^{*}$ or the term
+premium --- moves the ten-year yield by roughly half as much.
+
+That estimate is an upper bound and should be treated as one. Any slow drift in the true
+neutral rate that the proxy misses --- the disinflation, movements in $r^{*}$ that HLW does not
+capture --- is dumped into the residual and reads as gap persistence. A better $\pi^{*}$ series
+would pull the half-life down. But it would have to fall to roughly one year before
+$\omega(10\text{y})$ reached 0.15.
+
+\subsubsection*{Why this bears on the far-forward evidence}
+
+The last column is the one that matters for Hillenbrand's second piece of evidence
+(\S1.2). Testing the pattern on the 5-year, 5-year-forward rate is exactly the right
+instinct: the first five years of the expected path drop out, so the stance term is
+mechanically damped. But the test is only \emph{decisive} if the gap is fast. At a one-year
+half-life the 5y5y weight is 0.01 and the argument is airtight; at four years it is 0.28,
+and a 100 bp stance revision still moves the 5y5y forward by nearly 30 bp --- comfortably
+enough to generate the observed window moves without any \rs{} news at all.
+
+At the persistence actually estimated above, the far-forward result does not separate
+endpoint news from stance news. Whether it does is an empirical question about $\rho$ that
+this literature has not addressed, and it is cheap to address: the half-life of the policy
+gap is estimable, and the sensitivity of the conclusion to it is one line of arithmetic.
+
+\subsubsection*{The identification problem, stated}
+
+Differencing \eqref{eq:identity} over an announcement window,
+\begin{equation}
+\Delta y^{(n)}_t \;=\; \underbrace{\Delta r^{*}_t + \Delta \pi^{*}_t}_{\text{endpoint news}}
+\;+\; \underbrace{\omega\,\Delta\text{gap}_t + \text{gap}_t\,\Delta\omega}_{\text{stance and persistence news}}
+\;+\; \Delta TP^{(n)}_t .
+\label{eq:windowdiff}
+\end{equation}
+Four terms, one observable. Note that the second stance term, $\text{gap}_t\,\Delta\omega$, is a
+revision to \emph{how long the current stance will last} --- which is what forward guidance is,
+and which is largest precisely when the stance is large.
+
+\subsubsection*{Three consequences for the project}
+
+\textbf{1. ``The Fed moves long rates'' does not imply ``the Fed moves \rs{} beliefs.''} The
+stance terms are a live alternative at the persistence the data suggest, and the
+$\text{gap}_t\,\Delta\omega$ piece is largest exactly when the stance is large --- 2008--09 and
+2022--24. It is also plausibly what Bauer, Pflueger \& Sunderam's perceived-reaction-function
+result is picking up.
+
+\textbf{2. $\pi^{*}$ is not fixed over most of the sample.} The claim that the inflation
+anchor is constant is defensible after roughly 2000 and indefensible before it: the 1989--1999
+window declines coincide with the disinflation and with the Fed acquiring credibility, so
+$\Delta\pi^{*}$ plausibly carries a large share of them. Since 81\% of the in-window decline
+predates 2012 (\S5.3), this is not a small caveat --- it means the pre-2012 evidence cannot
+be read as \rs{} learning either. TIPS breakevens begin in 1997 (liquid from about 2003), so
+the decomposition is only testable on the back half.
+
+\textbf{3. The identity is what makes the term-premium question sharp.} If $\Delta\pi^{*}$ and
+the stance terms could be shut down, then a permanent window move in the ten-year would have
+to be $\Delta r^{*}$ or $\Delta TP$, and the whole question reduces to splitting those two.
+That is the design in \S5 --- and it is why the failure of the market-side endpoint measure
+is fatal rather than inconvenient.
